@@ -15,6 +15,10 @@ public class LottoNumber {
     private static final Map<Integer, LottoNumber> CACHE = new HashMap<>();
     private int value;
 
+    static {
+        createCache();
+    }
+
     private LottoNumber(int value) {
         this.value = value;
     }
@@ -28,7 +32,7 @@ public class LottoNumber {
     public static LottoNumber of(int value) {
         validateValue(value);
         if (CACHE.get(value) == null) {
-            createCache();
+            createLottoNumber(value);
         }
         return CACHE.get(value);
     }
@@ -38,6 +42,10 @@ public class LottoNumber {
         for (int i = MIN; i < MAX + 1; i++) {
             CACHE.put(i, lottoNumberInBox.get(i - 1));
         }
+    }
+
+    private static void createLottoNumber(int value) {
+        CACHE.put(value, new LottoNumber(value));
     }
 
     public static List<LottoNumber> createLottoNumberBox() {

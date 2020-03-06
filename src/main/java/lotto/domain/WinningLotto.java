@@ -1,11 +1,10 @@
 package lotto.domain;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WinningLotto {
@@ -29,14 +28,10 @@ public class WinningLotto {
     private Map<Rank, Integer> calculateWinningRanks(Supplier<Stream<Rank>> ranks) {
         Map<Rank, Integer> winningRanks = new HashMap<>();
 
-        List<Integer> winningTicketSizes = ranks.get()
-            .map(rank -> winningRanks.getOrDefault(rank, DEFAULT_WINNING_TICKET_SIZE))
-            .collect(Collectors.toList());
-
-        for (int winningTicketSize : winningTicketSizes) {
-            ranks.get()
-                .forEach(rank -> winningRanks.put(rank, winningTicketSize + WINNING_AMOUNT));
-        }
+        ranks.get()
+            .forEach(rank -> winningRanks.put(rank,
+                Optional.ofNullable(winningRanks.get(rank)).orElse(DEFAULT_WINNING_TICKET_SIZE)
+                    + WINNING_AMOUNT));
         return winningRanks;
     }
 
